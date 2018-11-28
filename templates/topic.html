@@ -1,7 +1,12 @@
-<h1> Hello, {{name}}! </h1>
+<h1> {{ greeting }}, {{ name }}! </h1>
 <h2> Today's top headlines in {{topic}} are... </h2>
 <ol><h3>
 {% for item in my_list %}
-    <li> <h4> {{item['title']}} ({{item['url']}}) </h4> </li>
+    <li> 
+        <h4> 
+            {{item['title']}} 
+            <a href = "{{item['url']}}" target = "_blank">({{item['url']}})</a>
+        </h4>
+    </li>
 {% endfor %}
 </h3></ol>

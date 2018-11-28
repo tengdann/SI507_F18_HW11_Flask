@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import requests
 import secrets
 import json
+from datetime import datetime, time
 app = Flask(__name__)
 
 api_key = secrets.api_key
@@ -21,12 +22,24 @@ page_list = ['home', 'opinion', 'world', 'national', 'politics', 'upshot', 'nyre
 @app.route('/user/<usr>')
 def user(usr):
     readback = json.loads(requests.get(make_url('technology', 'json')).text)
-    return render_template('user.html', name = usr, topic = 'technology', my_list = readback['results'][:5], list_page = page_list)
+    return render_template('user.html', greeting = decide_greeting(), name = usr, topic = 'technology', my_list = readback['results'][:5], list_page = page_list)
     
 @app.route('/user/<usr>/<tpc>')
 def topic(usr, tpc):
     readback = json.loads(requests.get(make_url(str(tpc), 'json')).text)
-    return render_template('topic.html', name = usr, topic = tpc, my_list = readback['results'][:5])
+    return render_template('topic.html', greeting = decide_greeting(), name = usr, topic = tpc, my_list = readback['results'][:5])
+    
+def decide_greeting():
+    timenow = datetime.now().time()
+    if time(0) < timenow and timenow <= time(12):
+        return 'Good morning'
+    elif time(12) < timenow and timenow <= time(16):
+        return 'Good afternoon'
+    elif time(16) < timenow and timenow <= time(20):
+        return 'Good evening'
+    else:
+        return 'Good night'
+    
     
     
 if __name__ == '__main__':
